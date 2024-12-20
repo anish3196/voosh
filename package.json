@@ -1,0 +1,37 @@
+{
+  "name": "voosh-test",
+  "version": "1.0.0",
+  "description": "this server is made for voosh test",
+  "main": "index.js",
+  "scripts": {
+    "dev": "SET DEBUG=voosh-test:* & nodemon api/index.js",
+    "start": "node api/index.js",
+    "production": "NODE_ENV=production nodemon api/index.js"
+  },
+  "keywords": [],
+  "author": "Anish",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dayjs": "^1.10.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^6.1.0",
+    "file-type": "^18.5.0",
+    "formidable": "^3.5.0",
+    "helmet": "^5.0.2",
+    "js-cookie": "^3.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^3.6.10",
+    "mongoose": "^6.12.0",
+    "mongoose-sequence": "^5.3.1",
+    "read-chunk": "^4.0.3",
+    "sharp": "^0.32.4",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
