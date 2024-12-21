@@ -3,7 +3,7 @@ const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 const jwt = require("jsonwebtoken");
-const { signInToken, tokenForVerify, sendEmail } = require("../config/auth");
+const { signInToken } = require("../config/auth");
 const {createResponse} =  require("../utils/response.util")
 const User = require("../models/User");
 
@@ -111,6 +111,15 @@ const logoutUser = (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
+    
+    const { old_password, new_password } = req.body;
+
+    // Validation for required fields
+    if (!old_password || !new_password ) {
+      return res.status(400).json(createResponse(400, null, "All required fields must be provided"));
+    }
+
+
     const { email } = req.user;
     const user = await User.findOne({ email });
 
@@ -120,7 +129,7 @@ const resetPassword = async (req, res) => {
       );
     }
 
-    const { old_password, new_password } = req.body;
+
     const isMatch = bcrypt.compareSync(old_password, user.password);
     
     if (!isMatch) {
