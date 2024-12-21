@@ -15,6 +15,6 @@ router.get('/:category', getFavoritesByCategory);
 router.post('/add-favorite', createFavorite);
 
 // Delete a favorite by ID
-router.delete('/:id', deleteFavorite);
+router.delete('/remove-favorite/:id', deleteFavorite);
 
 module.exports = router;
