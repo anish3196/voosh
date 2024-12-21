@@ -220,20 +220,18 @@ const addUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const admin = await User.findOne({ _id: req.params.id });
-    
-    if (!admin) {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body }, // Use $set to update only the provided fields
+      { new: true, runValidators: true } // Options to return the updated document and run validators
+    );
+
+    if (!updatedUser) {
       return res.status(404).json(
         createResponse(404, null, "User not found.", null)
       );
     }
 
-    admin.name = { ...admin.name, ...req.body.name };
-    admin.email = req.body.email;
-    admin.role = req.body.role;
-
-
-    const updatedUser = await admin.save();
     const token = signInToken(updatedUser);
 
     res.status(200).json(
@@ -250,6 +248,9 @@ const updateUser = async (req, res) => {
     );
   }
 };
+
+
+
 
 const deleteUser = async (req, res) => {
   try {

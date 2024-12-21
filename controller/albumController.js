@@ -84,12 +84,9 @@ const getAlbumById = async (req, res) => {
 // Update an album by ID
 const updateAlbum = async (req, res) => {
   try {
-    const { name, year, hidden, artist_id } = req.body;
-
-
     const updatedAlbum = await Album.findByIdAndUpdate(
       req.params.id,
-      { name, year, hidden, artist_id },
+      { $set: req.body },
       { new: true, runValidators: true }
     );
     if (!updatedAlbum) {

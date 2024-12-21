@@ -47,10 +47,9 @@ const getArtistById = async (req, res) => {
 // Update an artist by ID
 const updateArtist = async (req, res) => {
   try {
-    const { name, grammy, hidden } = req.body;
     const updatedArtist = await Artist.findByIdAndUpdate(
       req.params.id,
-      { name, grammy, hidden },
+      { $set: req.body },
       { new: true, runValidators: true }
     );
     if (!updatedArtist) {

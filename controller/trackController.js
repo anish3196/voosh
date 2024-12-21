@@ -99,11 +99,9 @@ const getTrackById = async (req, res) => {
 // Update a track by ID
 const updateTrack = async (req, res) => {
   try {
-    const { name, duration, hidden, album_id, artist_id } = req.body;
-
     const updatedTrack = await Track.findByIdAndUpdate(
       req.params.id,
-      { name, duration, hidden, album_id, artist_id },
+      { $set: req.body },
       { new: true, runValidators: true }
     );
     if (!updatedTrack) {
