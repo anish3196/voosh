@@ -4,10 +4,6 @@ const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
     {
-      name: {
-        type: String,
-        required: true,
-      },
       email: {
         type: String,
         required: true,
@@ -15,14 +11,12 @@ const userSchema = new mongoose.Schema(
       },
       password: {
         type: String,
-        required: false,
+        required: true,
         default: bcrypt.hashSync("12345678"),
       },
       
       role: {
         type: String,
-        required: true,
-        default: "Admin",
         enum: [
           "Admin",
           "Editor",

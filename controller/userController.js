@@ -11,6 +11,13 @@ const User = require("../models/User");
 
 const registerUser = async (req, res) => {
   try {
+    const { email, password } = req.body;
+
+    // Validation for required fields
+    if (!email || !password ) {
+      return res.status(400).json(createResponse(400, null, "All required fields must be provided"));
+    }
+
     const isAdded = await User.findOne({ email: req.body.email });
     if (isAdded) {
       return res.status(409).json(
@@ -18,16 +25,38 @@ const registerUser = async (req, res) => {
       );
     }
 
+    // Check if there is already an admin in the database
+    const adminExists = await User.findOne({ role: 'Admin' });
+
+    let role;
+    if (!adminExists) {
+      // If no admin exists, allow the first user to register as Admin
+      role = req.body.role || 'Admin';
+    } else {
+      // If an admin exists, role must be provided and cannot be Admin
+      if (req.body.role === 'Admin') {
+        return res.status(403).json(
+          createResponse(403, null, "Admin role is already assigned to an existing user.", null)
+        );
+      }
+      if (!req.body.role) {
+        return res.status(400).json(
+          createResponse(400, null, "Role is required for this user.", null)
+        );
+      }
+      role = req.body.role;
+    }
+
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
-      role: req.body.role,
+      role: role,
       password: bcrypt.hashSync(req.body.password),
     });
 
     const user = await newUser.save();
     const token = signInToken(user);
-    
+
     res.status(201).json(
       createResponse(201, {
         token,
@@ -44,6 +73,10 @@ const registerUser = async (req, res) => {
   }
 };
 
+
+
+
+
 const loginUser = async (req, res) => {
   try {
     const admin = await User.findOne({ email: req.body.email });
@@ -53,8 +86,8 @@ const loginUser = async (req, res) => {
         createResponse(200, {
           token,
           _id: admin._id,
-          name: admin.name,
           email: admin.email,
+          role: admin.role,
         }, "Login successful.", null)
       );
     } else {
@@ -143,17 +176,24 @@ const getUserById = async (req, res) => {
 const addUser = async (req, res) => {
   // console.log("add staf....", req.body.userData);
   try {
-    const isAdded = await User.findOne({ email: req.body.userData.email });
+
+    const { email, password ,role } = req.body;
+
+    // Validation for required fields
+    if (!email || !password || !role) {
+      return res.status(400).json(createResponse(400, null, "All required fields must be provided"));
+    }
+
+    const isAdded = await User.findOne({ email: email });
     if (isAdded) {
       return res.status(400).send({
         message: "This Email already Added!",
       });
     } else {
       const newUser = new User({
-        name: req.body.userData.name ,
-        email: req.body.userData.email,
-        password: bcrypt.hashSync(req.body.userData.password),
-        role: req.body.userData.role,
+        email: email,
+        password: bcrypt.hashSync(password),
+        role: role,
       });
       await newUser.save();
       res.status(200).send({
@@ -181,13 +221,8 @@ const updateUser = async (req, res) => {
 
     admin.name = { ...admin.name, ...req.body.name };
     admin.email = req.body.email;
-    admin.phone = req.body.phone;
     admin.role = req.body.role;
-    admin.forcepwreset = false;
-    admin.password = req.body.password !== undefined
-      ? bcrypt.hashSync(req.body.password)
-      : admin.password;
-    admin.image = req.body.image;
+
 
     const updatedUser = await admin.save();
     const token = signInToken(updatedUser);
@@ -196,7 +231,6 @@ const updateUser = async (req, res) => {
       createResponse(200, {
         token,
         _id: updatedUser._id,
-        name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
       }, "User updated successfully.", null)
