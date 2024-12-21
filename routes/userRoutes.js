@@ -23,7 +23,7 @@ router.post("/add-user", isAdmin,addUser);
 router.get("/", isAdmin,getAllUser);
 
 //get a user
-router.post("/:id", isAdminOrEditor,getUserById);
+router.get("/:id", isAdminOrEditor,getUserById);
 
 //update a user
 router.put("/:id", isAdminOrEditor,updateUser);

@@ -1,5 +1,6 @@
 const Album = require('../models/Album');
 const Artist = require('../models/Artist'); 
+const mongoose = require("mongoose");
 const { createResponse } = require('../utils/response.util'); 
 
 // Create a new album
@@ -32,10 +33,14 @@ const getAlbums = async (req, res) => {
 
     // Retrieve and add Artist names
     const albumsWithArtistNames = await Promise.all(albums.map(async (album) => {
-      const artist = await Artist.findById(album.artist_id).select('name');
+      let artistName = '';
+      if (mongoose.Types.ObjectId.isValid(album.artist_id)) {
+        const artist = await Artist.findById(album.artist_id).select('name');
+        artistName = artist ? artist.name : '';
+      }
       return {
         ...album._doc,
-        artistName: artist ? artist.name : null
+        artistName
       };
     }));
 
@@ -45,19 +50,26 @@ const getAlbums = async (req, res) => {
   }
 };
 
+
+
 // Get an album by ID
 const getAlbumById = async (req, res) => {
   try {
-    const album = await Album.findById(req.params.id);
+    const { id } = req.params;
+    const album = await Album.findById(id);
     if (!album) {
       return res.status(404).json(createResponse(404, null, "Album not found"));
     }
 
-    // Retrieve and add Artist name
-    const artist = await Artist.findById(album.artist_id).select('name');
+    let artistName = '';
+    if (mongoose.Types.ObjectId.isValid(album.artist_id)) {
+      const artist = await Artist.findById(album.artist_id).select('name');
+      artistName = artist ? artist.name : '';
+    }
+
     const albumWithArtistName = {
       ...album._doc,
-      artistName: artist ? artist.name : null
+      artistName
     };
 
     res.status(200).json(createResponse(200, albumWithArtistName, "Album fetched successfully!"));
@@ -65,6 +77,9 @@ const getAlbumById = async (req, res) => {
     res.status(500).json(createResponse(500, null, "Failed to fetch album", err.message));
   }
 };
+
+
+
 
 // Update an album by ID
 const updateAlbum = async (req, res) => {
@@ -81,11 +96,17 @@ const updateAlbum = async (req, res) => {
       return res.status(404).json(createResponse(404, null, "Album not found"));
     }
 
-    // Retrieve and add Artist name
+    let artistName = "";
+
+    if (mongoose.Types.ObjectId.isValid(updatedAlbum.artist_id)) {
+      // Retrieve and add Album name
     const artist = await Artist.findById(updatedAlbum.artist_id).select('name');
+    artistName = artist ? artist.name : '';
+    }
+
     const updatedAlbumWithArtistName = {
       ...updatedAlbum._doc,
-      artistName: artist ? artist.name : null
+      artistName
     };
 
     res.status(200).json(createResponse(200, updatedAlbumWithArtistName, "Album updated successfully!"));

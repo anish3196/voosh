@@ -1,15 +1,15 @@
-const Favorite = require('../models/Favorite'); // Adjust the path as necessary
-const Artist = require('../models/Artist'); // Adjust the path as necessary
-const Album = require('../models/Album'); // Adjust the path as necessary
-const Track = require('../models/Track'); // Adjust the path as necessary
+const Favorite = require('../models/Favorite'); 
+const Artist = require('../models/Artist'); 
+const Album = require('../models/Album'); 
+const Track = require('../models/Track'); 
+const mongoose = require("mongoose");
+const { createResponse } = require('../utils/response.util'); 
 
-const { createResponse } = require('../utils/response.util'); // Adjust the path as necessary
 
-// Fetch favorites by category with pagination
 const getFavoritesByCategory = async (req, res) => {
   try {
-    const { category } = req.query;
-    const limit = parseInt(req.query.limit) || 5; // Default limit is 10
+    const { category } = req.params;
+    const limit = parseInt(req.query.limit) || 5; // Default limit is 5
     const offset = parseInt(req.query.offset) || 0; // Default offset is 0
 
     // Validation for required fields
@@ -23,16 +23,23 @@ const getFavoritesByCategory = async (req, res) => {
 
     // Retrieve and add names based on category
     const favoritesWithNames = await Promise.all(favorites.map(async (favorite) => {
-      let itemName = null;
+      let itemName = '';
+
       if (favorite.category === 'artist') {
-        const item = await Artist.findById(favorite.item_id).select('name');
-        itemName = item ? item.name : null;
+        if (mongoose.Types.ObjectId.isValid(favorite.item_id)) {
+          const item = await Artist.findById(favorite.item_id).select('name');
+          itemName = item ? item.name : '';
+        }
       } else if (favorite.category === 'album') {
-        const item = await Album.findById(favorite.item_id).select('name');
-        itemName = item ? item.name : null;
+        if (mongoose.Types.ObjectId.isValid(favorite.item_id)) {
+          const item = await Album.findById(favorite.item_id).select('name');
+          itemName = item ? item.name : '';
+        }
       } else if (favorite.category === 'track') {
-        const item = await Track.findById(favorite.item_id).select('name');
-        itemName = item ? item.name : null;
+        if (mongoose.Types.ObjectId.isValid(favorite.item_id)) {
+          const item = await Track.findById(favorite.item_id).select('name');
+          itemName = item ? item.name : '';
+        }
       }
       return {
         ...favorite._doc,
