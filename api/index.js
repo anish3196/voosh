@@ -16,6 +16,12 @@ const artistRoutes = require("../routes/artistRoutes");
 
 const trackRoutes = require("../routes/trackRoutes");
 
+const commonAlbumRoutes = require("../routes/commonAlbumRoutes");
+
+const commonArtistRoutes = require("../routes/commonArtistRoutes");
+
+const commonTrackRoutes = require("../routes/commonTrackRoutes");
+
 const favoriteRoutes = require("../routes/favoriteRoutes");
 
 const logoutRoute = require("../routes/logoutRoute")
@@ -43,6 +49,9 @@ app.use("/api/v1/album/", isAuth,isAdminOrEditor,albumRoutes);
 app.use("/api/v1/tracks/", isAuth,isAdminOrEditor,trackRoutes);
 app.use("/api/v1/artists/", isAuth,isAdminOrEditor,artistRoutes);
 app.use("/api/v1/favorites/", isAuth,isAdminOrEditor,favoriteRoutes);
+app.use("/api/v1/album/", isAuth,commonAlbumRoutes);
+app.use("/api/v1/tracks/", isAuth,commonTrackRoutes);
+app.use("/api/v1/artists/", isAuth,commonArtistRoutes);
 app.use("/api/v1/", authRoutes);
 app.use("/api/v1/", isAuth, logoutRoute);
 
