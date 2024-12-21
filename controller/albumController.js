@@ -71,10 +71,6 @@ const updateAlbum = async (req, res) => {
   try {
     const { name, year, hidden, artist_id } = req.body;
 
-    // Validation for required fields
-    if (!name || !year || !artist_id) {
-      return res.status(400).json(createResponse(400, null, "All required fields must be provided"));
-    }
 
     const updatedAlbum = await Album.findByIdAndUpdate(
       req.params.id,

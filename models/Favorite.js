@@ -8,9 +8,8 @@ const favoriteSchema = new mongoose.Schema(
       enum: ['artist', 'album', 'track']
     },
     item_id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       required: [true, "Item ID is required"],
-      refPath: 'category'
     }
   },
   {

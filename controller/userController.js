@@ -87,8 +87,8 @@ const resetPassword = async (req, res) => {
       );
     }
 
-    const { oldPassword, newPassword } = req.body;
-    const isMatch = bcrypt.compareSync(oldPassword, user.password);
+    const { old_password, new_password } = req.body;
+    const isMatch = bcrypt.compareSync(old_password, user.password);
     
     if (!isMatch) {
       return res.status(400).json(
@@ -96,7 +96,7 @@ const resetPassword = async (req, res) => {
       );
     }
 
-    user.password = bcrypt.hashSync(newPassword);
+    user.password = bcrypt.hashSync(new_password);
     await user.save();
 
     res.status(200).json(
@@ -226,28 +226,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const updatedStatus = async (req, res) => {
-  try {
-    const result = await User.updateOne(
-      { _id: req.params.id },
-      { $set: { status: req.body.status } }
-    );
-    
-    if (result.matchedCount === 0) {
-      return res.status(404).json(
-        createResponse(404, null, "User not found.", null)
-      );
-    }
 
-    res.status(200).json(
-      createResponse(200, null, `Status updated to ${req.body.status} successfully.`, null)
-    );
-  } catch (err) {
-    res.status(500).json(
-      createResponse(500, null, "Failed to update status.", err.message)
-    );
-  }
-};
 module.exports = {
   registerUser,
   loginUser,
@@ -257,6 +236,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  updatedStatus,
   logoutUser,
 };

@@ -77,10 +77,6 @@ const updateTrack = async (req, res) => {
   try {
     const { name, duration, hidden, album_id, artist_id } = req.body;
 
-    // Validation for required fields
-    if (!name || !duration || !album_id || !artist_id) {
-      return res.status(400).json(createResponse(400, null, "All required fields must be provided"));
-    }
 
     const updatedTrack = await Track.findByIdAndUpdate(
       req.params.id,

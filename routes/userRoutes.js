@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { isAdmin, isAdminOrEditor } = require("../config/auth");
+
 const {
   resetPassword,
   addUser,
@@ -12,21 +14,21 @@ const {
 
 
 //reset-password
-router.put("/update-password", resetPassword);
+router.put("/update-password", isAdminOrEditor ,resetPassword);
 
 //add a user
-router.post("/add-user", addUser);
+router.post("/add-user", isAdmin,addUser);
 
 //get all user
-router.get("/", getAllUser);
+router.get("/", isAdmin,getAllUser);
 
 //get a user
-router.post("/:id", getUserById);
+router.post("/:id", isAdminOrEditor,getUserById);
 
 //update a user
-router.put("/:id", updateUser);
+router.put("/:id", isAdminOrEditor,updateUser);
 
 //delete a user
-router.delete("/:id", deleteUser);
+router.delete("/:id",isAdmin, deleteUser);
 
 module.exports = router;

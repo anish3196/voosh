@@ -16,15 +16,8 @@ const artistRoutes = require("../routes/artistRoutes");
 
 const trackRoutes = require("../routes/trackRoutes");
 
-const commonAlbumRoutes = require("../routes/commonAlbumRoutes");
-
-const commonArtistRoutes = require("../routes/commonArtistRoutes");
-
-const commonTrackRoutes = require("../routes/commonTrackRoutes");
-
 const favoriteRoutes = require("../routes/favoriteRoutes");
 
-const logoutRoute = require("../routes/logoutRoute")
 
 const { isAuth, isAdmin, isAdminOrEditor } = require("../config/auth");
 
@@ -44,16 +37,12 @@ app.get("/", (req, res) => {
 });
 
 
-app.use("/api/v1/users/", isAuth, isAdmin,userRoutes);
-app.use("/api/v1/album/", isAuth,isAdminOrEditor,albumRoutes);
-app.use("/api/v1/tracks/", isAuth,isAdminOrEditor,trackRoutes);
-app.use("/api/v1/artists/", isAuth,isAdminOrEditor,artistRoutes);
-app.use("/api/v1/favorites/", isAuth,isAdminOrEditor,favoriteRoutes);
-app.use("/api/v1/album/", isAuth,commonAlbumRoutes);
-app.use("/api/v1/tracks/", isAuth,commonTrackRoutes);
-app.use("/api/v1/artists/", isAuth,commonArtistRoutes);
+app.use("/api/v1/users/", isAuth,userRoutes);
+app.use("/api/v1/albums/", isAuth,albumRoutes);
+app.use("/api/v1/tracks/", isAuth,trackRoutes);
+app.use("/api/v1/artists/", isAuth, artistRoutes);
+app.use("/api/v1/favorites/", isAuth,favoriteRoutes);
 app.use("/api/v1/", authRoutes);
-app.use("/api/v1/", isAuth, logoutRoute);
 
 app.use((err, req, res, next) => {
     if (res.headersSent) return next(err);

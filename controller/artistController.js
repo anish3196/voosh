@@ -6,9 +6,9 @@ const createArtist = async (req, res) => {
   try {
     const { name, grammy, hidden } = req.body;
 
-    if (!name || !grammy || !hidden) {
-        return res.status(400).json(createResponse(400, null, "All required fields must be provided"));
-      }
+    console.log(req.body)
+
+    if (name === undefined || grammy === undefined || hidden === undefined) { return res.status(400).json(createResponse(400, null, "All required fields must be provided")); }
     const newArtist = new Artist({
       name,
       grammy,

@@ -19,13 +19,11 @@ const trackSchema = new mongoose.Schema(
       default: false
     },
     album_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Album',
+      type: String,
       required: [true, "Album reference is required"]
     },
     artist_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Artist',
+      type: String,
       required: [true, "Album reference is required"]
     }
   },

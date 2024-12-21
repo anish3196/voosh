@@ -20,8 +20,7 @@ const albumSchema = new mongoose.Schema(
       default: false
     },
     artist_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Artist',
+      type: String,
       required: [true, "Artist reference is required"]
     }
   },

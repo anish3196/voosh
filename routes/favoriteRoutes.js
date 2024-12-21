@@ -12,7 +12,7 @@ const {
 router.get('/:category', getFavoritesByCategory);
 
 // Create a new favorite
-router.post('/', createFavorite);
+router.post('/add-favorite', createFavorite);
 
 // Delete a favorite by ID
 router.delete('/:id', deleteFavorite);
